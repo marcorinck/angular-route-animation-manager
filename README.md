@@ -8,9 +8,9 @@ Notable changes:
 
 * directive is using routeManagerService directly, not via $rootScope in original project
 * priority of selecting animation class for route change is as this:
-*#$rootScope.nextAnimation property (if set, will be reset after route change)
-*#nextRoute.animation property (if set)
-*#defaultAnimation (can be configured via routeManangerServiceProvider.setDefaultAnimation() during angular config phase)
+  1. $rootScope.nextAnimation property (if set, will be reset after route change), primary use for this is that your controller can override normal animation of route change for some special use case.
+  2. nextRoute.animation property (if set)
+  3. defaultAnimation (can be configured via routeManangerServiceProvider.setDefaultAnimation() during angular config phase)
 * all files are AMD modules, as internal project uses requireJS for which I coded this.
 
 
