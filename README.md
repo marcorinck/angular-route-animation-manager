@@ -1,89 +1,28 @@
 # angular-route-animation-manager
 
-#### A provider that helps you manage transitions when routing from one view to another
-----
-###Note: This is more a tutorial/demo than a production plugin and has not been tested in all browsers.
+This is a fork of [angular-route-animation-manager by yairhaimo](https://github.com/yairhaimo/angular-route-animation-manager)
 
->**[Check out this plunker for a working demo](http://plnkr.co/edit/vECalSypioxL1sFFTjjt?p=preview)**
--
+I liked his idea of managing ng-view animations on the routes itself, but didn't like some aspects of his implementation.
 
-This provider helps you define which animations will run when routing to another view.
-The plugin works by setting a predefined class on the ng-view container whenever a route is changing.
+Notable changes:
 
-Prerequisites are angular.js, angular-animate.js, angular-route.js and a css with defined animations.
+* directive is using routeManagerService directly, not via $rootScope in original project
+* priority of selecting animation class for route change is as this:
+*#$rootScope.nextAnimation property (if set, will be reset after route change)
+*#nextRoute.animation property (if set)
+*#defaultAnimation (can be configured via routeManangerServiceProvider.setDefaultAnimation() during angular config phase)
+* all files are AMD modules, as internal project uses requireJS for which I coded this.
 
-## Get Started
-**(1)** Load the angular-route-animation-manager.js and the styles.css files into your html.
-Note that the css in this project is for the demo app. Remove any excess styles and change it to fit your needs.
+
+Usage of directive is the same as in original project.
+
 ```html
-<script src="angular-route-animation-manager.js"></script>
-<link rel="stylesheet" href="styles.css"/>
+	<div route-animation-manager>
+		<div ng-view class="view-animate"></div>
+	</div>
 ```
 
+There are some example animations defined in animations.css.
 
-**(2)** Add the required dependencies to your module: 
->
-```javascript
-angular.module('myApp', ['ngRoute', 'ngAnimate', 'ngRouteAnimationManager']);
-```
+Sorry, there is no running demo for now.
 
-**(3)** (Optional) Configure a default animation:
-```javascript
-app.config(['RouteAnimationManagerProvider', function(RouteAnimationManagerProvider) {
-  RouteAnimationManagerProvider.setDefaultAnimation('fade');
-}]);
-```
-
-**(4)** Configure your routes for animation:
-```javascript
-app.config(['$routeProvider', 'RouteAnimationManagerProvider', function($routeProvider, RouteAnimationManagerProvider) {
-  $routeProvider.when('/', {
-    template: '<div>home</div>',
-    data: {
-      animationConf: {
-        two: 'flip', //when animating to or from the /two url use the flip animation
-        one: 'fade', //when animating to or from the /one url use the fade animation
-        fallback: 'slide' //otherwise use the slide animation
-      }
-    }
-  })
-  .when('/one', {
-    template: '<div>one</div>',
-    data: {
-      animationConf: {
-        root: 'flip', //when routing from the / url use the flip animation
-        fallback: 'rotate' //otherwise use the rotate animation
-      }
-    }
-  })
-  .when('/two', {
-    template: '<div>two</div>',
-    data: {
-      animationConf: {
-        fallback: 'slide' //always use the slide animation
-      }
-    }
-  }) 
-  .when('/three', {
-    template: '<div>three</div>',
-    data: {
-      animationConf: { //no custom animations defined, use the global default
-      }
-    }
-  }) 
-  .otherwise({redirectTo: '/'});
-  
-  
-  RouteAnimationManagerProvider.setDefaultAnimation('fade'); //define a global default animation
-}]);
-```
-
-**(5)** Define your ng-view in the following manner:
-```html
-<div route-animation-manager>
-  <div ng-view class="view-animate"></div>
-</div>
-```
-
-
-The css animations were copied from <a href="http://dfsq.github.io/ngView-animation-effects/app"> Aliaksandr Astashenkau's demo site</a>.
